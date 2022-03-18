@@ -22,7 +22,6 @@ input::placeholder {
 }
 
 
-
 .container {
 	max-width: 1140px;
 	
@@ -31,9 +30,11 @@ input::placeholder {
 }
 
 .button {
+	width: 100%;
 	height: 40px;
 
 	display: flex;
+	justify-content: center;
 	align-items: center;
 
 	font-size: 16px;
@@ -63,16 +64,24 @@ input::placeholder {
 }
 
 
-
 .users-page {
 	padding: 100px 0;
 }
 
 .users-page__title {
-	font-size: 36px;
 	font-family: 'Rubik', sans-serif;
+}
 
-	margin-bottom: 74px;
+.users-page__title_main {
+	font-size: 36px;
+	
+	margin-bottom: 54px;
+}
+
+.users-page__title_mini {
+	font-size: 24px;
+
+	margin-bottom: 34px;
 }
 
 .users-page__item-box {
@@ -80,6 +89,8 @@ input::placeholder {
 	flex-direction: column;
 
 	row-gap: 30px;
+
+	margin-bottom: 70px;
 }
 
 .user-item {

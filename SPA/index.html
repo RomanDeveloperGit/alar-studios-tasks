@@ -18,7 +18,7 @@
 	<body>
 		<section class="users-page">
 			<div class="container">
-				<h1 class="users-page__title">Пользователи</h1>
+				<h1 class="users-page__title users-page__title_main">Пользователи</h1>
 				<div class="users-page__item-box">
 					<div class="user-item">
 						<div class="user-item__input-box">
@@ -36,6 +36,68 @@
 							<button class="button button_red">Удалить</button>
 						</div>
 					</div>
+					<div class="user-item">
+						<div class="user-item__input-box">
+							<div class="user-item__input-wrapper">
+								<input class="user-item__name" type="text" placeholder="Введите имя" readonly>
+								<span class="user-item__validation-error">*Заполните поле!</span>
+							</div>
+							<div class="user-item__input-wrapper">
+								<input class="user-item__phone" type="text" placeholder="+7 (901) 949 53-17" readonly>
+								<span class="user-item__validation-error">*Заполните поле!</span>
+							</div>
+						</div>
+						<div class="user-item__button-box">
+							<button class="button button_green">Редактировать</button>
+							<button class="button button_red">Удалить</button>
+						</div>
+					</div>
+					<div class="user-item">
+						<div class="user-item__input-box">
+							<div class="user-item__input-wrapper">
+								<input class="user-item__name" type="text" placeholder="Введите имя" readonly>
+								<span class="user-item__validation-error">*Заполните поле!</span>
+							</div>
+							<div class="user-item__input-wrapper">
+								<input class="user-item__phone" type="text" placeholder="+7 (901) 949 53-17" readonly>
+								<span class="user-item__validation-error">*Заполните поле!</span>
+							</div>
+						</div>
+						<div class="user-item__button-box">
+							<button class="button button_green">Редактировать</button>
+							<button class="button button_red">Удалить</button>
+						</div>
+					</div>
+					<div class="user-item">
+						<div class="user-item__input-box">
+							<div class="user-item__input-wrapper">
+								<input class="user-item__name" type="text" placeholder="Введите имя" readonly value="Роман">
+							</div>
+							<div class="user-item__input-wrapper">
+								<input class="user-item__phone" type="text" placeholder="+7 (901) 949 53-17" readonly value="+7 (901) 949 53-17">
+							</div>
+						</div>
+						<div class="user-item__button-box">
+							<button class="button button_green">Редактировать</button>
+							<button class="button button_red">Удалить</button>
+						</div>
+					</div>
+				</div>
+				<div class="users-page__new-item">
+					<h2 class="users-page__title users-page__title_mini">Добавить пользователя</h2>
+					<form class="user-item">
+						<div class="user-item__input-box">
+							<div class="user-item__input-wrapper">
+								<input class="user-item__name" type="text" placeholder="Введите имя">
+							</div>
+							<div class="user-item__input-wrapper">
+								<input class="user-item__phone" type="text" placeholder="+7 (901) 949 53-17">
+							</div>
+						</div>
+						<div class="user-item__button-box">
+							<button class="button button_green button_new-user">Добавить</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</section>
