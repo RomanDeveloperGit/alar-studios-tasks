@@ -21,6 +21,40 @@ body {
 	margin: 0 auto;
 }
 
+.button {
+	height: 40px;
+
+	display: flex;
+	align-items: center;
+
+	font-size: 16px;
+	border-radius: 8px; /* попробовать полное скругление, посмотреть */
+
+	padding: 0 50px;
+}
+
+.button_green {
+	background-color: #32B290;
+
+	transition: .5s;
+}
+
+.button_green:hover {
+	background-color: #208b6f;
+}
+
+.button_red {
+	background-color: #CB4041;
+
+	transition: .5s;
+}
+
+.button_red:hover {
+	background-color: #a11f1f;
+}
+
+
+
 .users-page {
 	padding: 100px 0;
 }
@@ -29,7 +63,3 @@ body {
 	font-size: 36px;
 	font-family: 'Rubik', sans-serif;
 }
-
-
-/* font-family: "Rubik", sans-serif;
-font-family: "Inter", sans-serif; */
