@@ -66,7 +66,6 @@ const createCanvasStars = ( context, color, offsetX = 0, offsetY = 0 ) => {
 };
 
 
-
 setCanvasBackground( canvases.starContainer, canvasContexts.starContainer );
 
 starsData.forEach( item => {
