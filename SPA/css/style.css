@@ -6,21 +6,30 @@ body {
 	display: flex;
 	flex-direction: column;
 
-	// font-size: px;
-	// font-family: ;
-	// font-weight: ;
+	font-size: 16px;
+	font-family: "Inter", sans-serif;
+	font-weight: 500;
 	
-	// color: ;
-	background-color: $defaultBg;
+	color: #ffffff;
+	background-color: #121619;
 }
 
 .container {
-	// max-width: (X + 30)px;
+	max-width: 1140px;
 	
-	padding: 0 15px;
+	padding: 0 20px;
 	margin: 0 auto;
 }
 
-.main {
-	flex-grow: 1;
+.users-page {
+	padding: 100px 0;
 }
+
+.users-page__title {
+	font-size: 36px;
+	font-family: 'Rubik', sans-serif;
+}
+
+
+/* font-family: "Rubik", sans-serif;
+font-family: "Inter", sans-serif; */
