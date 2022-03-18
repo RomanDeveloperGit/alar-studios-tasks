@@ -75,13 +75,13 @@ input::placeholder {
 .users-page__title_main {
 	font-size: 36px;
 	
-	margin-bottom: 54px;
+	margin-bottom: 50px;
 }
 
 .users-page__title_mini {
 	font-size: 24px;
 
-	margin-bottom: 34px;
+	margin-bottom: 30px;
 }
 
 .users-page__item-box {
@@ -138,6 +138,11 @@ input::placeholder {
 .user-item__validation-error {
 	font-size: 14px;
 	color: var(--red);
+}
+
+.user-item__validation-error_name,
+.user-item__validation-error_phone {
+	display: none;
 }
 
 .user-item__button-box {
