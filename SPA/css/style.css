@@ -1,11 +1,4 @@
-html, body {
-	height: 100%;
-}
-
 body {
-	display: flex;
-	flex-direction: column;
-
 	font-size: 16px;
 	font-family: "Inter", sans-serif;
 	font-weight: 500;
@@ -13,6 +6,22 @@ body {
 	color: #ffffff;
 	background-color: #121619;
 }
+
+input::placeholder {
+	opacity: 0.3;
+}
+
+:root {
+	--user-item-background: #1D2125;
+
+	--green: #32B290;
+	--green-active: #208b6f;
+
+	--red: #CB4041;
+	--red-active: #a11f1f;
+}
+
+
 
 .container {
 	max-width: 1140px;
@@ -28,29 +37,29 @@ body {
 	align-items: center;
 
 	font-size: 16px;
-	border-radius: 8px; /* попробовать полное скругление, посмотреть */
+	border-radius: 8px; /* 20px??? */
 
 	padding: 0 50px;
 }
 
 .button_green {
-	background-color: #32B290;
+	background-color: var(--green);
 
 	transition: .5s;
 }
 
 .button_green:hover {
-	background-color: #208b6f;
+	background-color: var(--green-active);
 }
 
 .button_red {
-	background-color: #CB4041;
+	background-color: var(--red);
 
 	transition: .5s;
 }
 
 .button_red:hover {
-	background-color: #a11f1f;
+	background-color: var(--red-active);
 }
 
 
@@ -62,4 +71,66 @@ body {
 .users-page__title {
 	font-size: 36px;
 	font-family: 'Rubik', sans-serif;
+
+	margin-bottom: 74px;
+}
+
+.users-page__item-box {
+	display: flex;
+	flex-direction: column;
+
+	row-gap: 30px;
+}
+
+.user-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	column-gap: 50px;
+
+	background-color: var(--user-item-background);
+	border-radius: 15px;
+
+	padding: 30px 40px;
+}
+
+.user-item__input-box {
+	max-width: 500px;
+
+	display: flex;
+	flex-direction: column;
+
+	row-gap: 10px;
+}
+
+.user-item__input-wrapper {
+	display: flex;
+	flex-direction: column;
+
+	row-gap: 2px;
+}
+
+.user-item__name {
+	width: 100%;
+
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.user-item__phone {
+	width: 100%;
+
+	font-size: 18px;
+}
+
+.user-item__validation-error {
+	font-size: 14px;
+	color: var(--red);
+}
+
+.user-item__button-box {
+	display: flex;
+
+	column-gap: 30px;
 }
