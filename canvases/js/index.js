@@ -1,4 +1,5 @@
 const rad = Math.PI / 180;
+
 const canvases = {
 	starContainer: document.querySelector( ".stars-canvas" ),
 	colorBox: document.querySelector( ".color-canvas" )
@@ -12,7 +13,7 @@ const canvasContexts = {
 const defaultStarPointOffsetX = 100;
 const defaultStarPointOffsetY = 100;
 
-const tStarData = [
+const starsData = [
 	{
 		color: "#FF0000",
 		offsetX: 0,
@@ -64,15 +65,16 @@ const createCanvasStars = ( context, color, offsetX = 0, offsetY = 0 ) => {
 	context.fill();
 };
 
+
+
 setCanvasBackground( canvases.starContainer, canvasContexts.starContainer );
 
-tStarData.forEach( item => {
+starsData.forEach( item => {
 	createCanvasStars( canvasContexts.starContainer, item.color, item.offsetX, item.offsetY );
 });
 
 canvases.starContainer.addEventListener( "click", event => {
 	const { 0: r, 1: g, 2: b, 3: a } = canvasContexts.starContainer.getImageData( event.layerX, event.layerY, 1, 1 ).data;
-	console.log( canvasContexts.starContainer.getImageData( event.layerX, event.layerY, 1, 1 ).data );
 
 	setCanvasBackground( canvases.colorBox, canvasContexts.colorBox, `rgba( ${r}, ${g}, ${b}, ${a} )` );
 });
