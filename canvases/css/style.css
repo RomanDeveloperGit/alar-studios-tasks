@@ -1,4 +1,13 @@
-html,
-body {
-	height: 100%;
+/* Как я понял адаптивность не нужно делать по ТЗ,
+тем не менее она поддерживается до 640 пикселей */
+
+.canvas-box {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	flex-wrap: wrap;
+	gap: 30px;
+
+	padding: 0 20px;
 }
