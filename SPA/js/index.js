@@ -7,56 +7,47 @@ const elements = {
 	newUserButton: document.querySelector( ".button_add-user" ),
 };
 
+// В конце: оставить плейсхолдеры фетч апи.
+
 const regName = /^[a-zа-я]+$/i;
 const regPhone = /^[a-zа-я]+$/i;
 
 const users = [
 	{
 		id: 0,
-		name: "Тест1",
-		phone: "8 (901) 949 53-17",
-		nameError: false,
-		phoneError: false,
+		name: "TestUser1",
+		phone: "+7-901-949-53-17",
 		isEditing: false
 	},
 	{
 		id: 12,
-		name: "Тест2",
-		phone: "8 (901) 949 53-17",
-		nameError: false,
-		phoneError: false,
+		name: "TestUser2",
+		phone: "+7-901-949-53-17",
 		isEditing: false
 	},
 	{
 		id: 22,
-		name: "Тест3",
-		phone: "8 (901) 949 53-17",
-		nameError: false,
-		phoneError: false,
+		name: "Роман",
+		phone: "+7-901-949-53-17",
 		isEditing: false
 	},
 	{
 		id: 32,
-		name: "Тест4",
-		phone: "8 (901) 949 53-17",
-		nameError: false,
-		phoneError: false,
+		name: "TestUser3",
+		phone: "+7-901-949-53-17",
 		isEditing: false
 	}
 ];
 
-// Создать функцию для изменения данных, сверять исходные и входные данные, заменять точечно.
-// Временно, потом провести точечное удаление/добавление в список, не весь массив рендерить заново.
-
-const getUserTemplateHTML = ( id, name, phone ) => {
-	return `<div class="user-item" data-id="${id}">
+const getUserTemplateHTML = ( userId, userName, userPhone ) => {
+	return `<div class="user-item" data-id="${userId}">
 		<div class="user-item__input-box">
 			<label class="user-item__input-wrapper">
-				<input class="user-item__name" type="text" placeholder="Введите имя" value="${name}" readonly>
+				<input class="user-item__name" type="text" placeholder="Введите имя" value="${userName}" readonly>
 				<span class="user-item__validation-error" style="display: none;"></span>
 			</label>
 			<label class="user-item__input-wrapper">
-				<input class="user-item__phone" type="text" placeholder="8 (901) 949 53-17" value="${phone}" readonly>
+				<input class="user-item__phone" type="text" placeholder="+7-999-999-99-99" value="${userPhone}" readonly>
 				<span class="user-item__validation-error" style="display: none;"></span>
 			</label>
 		</div>
@@ -68,14 +59,11 @@ const getUserTemplateHTML = ( id, name, phone ) => {
 };
 
 const initUsersHTML = () => {
-	users.forEach( item => elements.usersContainer.insertAdjacentHTML(
+	users.forEach( user => elements.usersContainer.insertAdjacentHTML(
 		"beforeEnd",
-		getUserTemplateHTML( item.id, item.name, item.phone )
+		getUserTemplateHTML( user.id, user.name, user.phone )
 	));
 };
-
-// ${item.nameError ? `<span class="user-item__validation-error">*Заполните поле!</span>` : ""}
-// ${item.phoneError ? `<span class="user-item__validation-error">*Заполните поле корректно!</span>` : ""}
 
 const getMessageValidationError = ( value, reg ) => {
 	if (!value.length) return "Заполните поле!"; 
@@ -84,14 +72,8 @@ const getMessageValidationError = ( value, reg ) => {
 	return false;
 }
 
-// В дальнейшем передавать, может, сразу значения инпутов?
-const getValidationInfo = ( nameInput, phoneInput ) => {
-	const name = nameInput.value;
-	const phone = phoneInput.value;
-
+const getValidationInfo = ( name, phone ) => {
 	const result = {
-		name,
-		phone,
 		nameErrorMessage: false,
 		phoneErrorMessage: false
 	};
@@ -103,7 +85,7 @@ const getValidationInfo = ( nameInput, phoneInput ) => {
 	return result;
 };
 
-const setNewUserError = ( errorElement, message ) => {
+const setVisibleError = ( errorElement, message ) => {
 	if (!message) return errorElement.style.display = "none";
 	message = `*${message}`;
 
@@ -120,14 +102,11 @@ const getUserIndex = userId => {
 };
 
 const addUser = ( name, phone ) => {
-	// ну, в качестве заглушки пусть будет timestamp)
-	const id = new Date().getTime();
+	const id = new Date().getTime(); // в качестве заглушки
 	users.push({
 		id,
 		name,
 		phone,
-		nameError: false,
-		phoneError: false,
 		isEditing: false
 	});
 
@@ -137,14 +116,36 @@ const addUser = ( name, phone ) => {
 	elements.newUserPhoneInput.value = "";
 };
 
-const setUser = ( name, phone ) => {
+const setUser = ( id, isEditing, name, phone ) => {
+	const userIndex = getUserIndex( id );
+	if (userIndex === -1) return;
 
+	const userItemHTML = document.querySelector( `.user-item[data-id="${id}"]` );
+
+	if (isEditing) {
+		userItemHTML.querySelector( ".user-item__name" ).focus();
+		userItemHTML.querySelector( ".user-item__name" ).selectionStart = userItemHTML.querySelector( ".user-item__name" ).value.length;
+	}
+	else {
+		// Проверка, если не совпадают, аналогично с отрисовкой.
+		users[userIndex].name = name;
+		users[userIndex].phone = phone;
+	}
+
+	users[userIndex].isEditing = isEditing;
+
+	userItemHTML.querySelector( ".user-item__name" ).readOnly = !isEditing;
+	userItemHTML.querySelector( ".user-item__phone" ).readOnly = !isEditing;
+
+	userItemHTML.querySelector( ".button_edit-user" ).innerHTML = isEditing ? "Сохранить" : "Редактировать";
 };
 
-const removeUser = userIndex => {
+const removeUser = id => {
+	const userIndex = getUserIndex( id );
+	if (userIndex === -1) return;
+
 	users.splice( userIndex, 1 );
-	
-	document.querySelectorAll( ".user-item" )[userIndex].remove();
+	document.querySelector( `.user-item[data-id="${id}"]` ).remove();
 };
 
 
@@ -152,47 +153,42 @@ const removeUser = userIndex => {
 initUsersHTML();
 
 elements.usersContainer.addEventListener( "click", event => {
+	const clickedElement = event.target;
+	const userId = parseInt( clickedElement.closest( ".user-item" )?.dataset.id );
 	// Как я помню, оператор ?. поддерживается не всеми браузерами, в таких ситуациях мне помогает Babel в Webpack/GULP.
-	const userId = parseInt( event.target.closest( ".user-item" )?.dataset.id );
 	if (isNaN( userId )) return;
 
-	const userIndex = getUserIndex( userId );
-	if (userIndex === -1) return;
+	if (clickedElement.classList.contains( "button_edit-user" )) {
+		const name = elements.usersContainer.querySelector( `.user-item[data-id="${userId}"] .user-item__name` ).value;
+		const phone = elements.usersContainer.querySelector( `.user-item[data-id="${userId}"] .user-item__phone` ).value;
 
-	if (event.target.classList.contains( "button_edit-user" )) {
-		const item = event.target.parentNode.parentNode;
-		users[userIndex].isEditing = !users[userIndex].isEditing;
+		if (clickedElement.innerHTML === "Сохранить") {
+			const { isError, nameErrorMessage, phoneErrorMessage } = getValidationInfo( name, phone );
+			const errorElements = elements.usersContainer.querySelectorAll( `.user-item[data-id="${userId}"] .user-item__validation-error` );
 
-		if (event.target.innerHTML === "Сохранить") {
-			users[userIndex].name = item.querySelector( ".user-item__name" ).value;
-			users[userIndex].phone = item.querySelector( ".user-item__phone" ).value;
+			if (!isError) setUser( userId, false, name, phone );
 
-			// initUsersHTML();
+			setVisibleError( errorElements[0], nameErrorMessage );
+			setVisibleError( errorElements[1], phoneErrorMessage );
 		}
 		else {
-			// initUsersHTML();
-
-			document.querySelectorAll( ".users-page__item-box .user-item__name" )[userIndex].focus();
-
-			// Временный костыль.
-			const value = document.querySelectorAll( ".users-page__item-box .user-item__name" )[userIndex].value;
-			document.querySelectorAll( ".users-page__item-box .user-item__name" )[userIndex].value = "";
-			document.querySelectorAll( ".users-page__item-box .user-item__name" )[userIndex].value = value;
-
-			// при точечном изменении передавать аргумент isFocusName и index, на который его применить и с инпутом которого обновлять данные.
+			setUser( userId, true );
 		}
 	}
-	else if (event.target.classList.contains( "button_remove-user" )) {
-		removeUser( userIndex );
+	else if (clickedElement.classList.contains( "button_remove-user" )) {
+		removeUser( userId );
 	}
 });
 
 elements.newUserButton.addEventListener( "click", event => {
 	event.preventDefault();
 
-	const { name, phone, isError, nameErrorMessage, phoneErrorMessage } = getValidationInfo( elements.newUserNameInput, elements.newUserPhoneInput );
+	const name = elements.newUserNameInput.value;
+	const phone = elements.newUserPhoneInput.value;
+
+	const { isError, nameErrorMessage, phoneErrorMessage } = getValidationInfo( name, phone );
 	if (!isError) addUser( name, phone );
 
-	setNewUserError( elements.newUserNameError, nameErrorMessage );
-	setNewUserError( elements.newUserPhoneError, phoneErrorMessage );
+	setVisibleError( elements.newUserNameError, nameErrorMessage );
+	setVisibleError( elements.newUserPhoneError, phoneErrorMessage );
 });
