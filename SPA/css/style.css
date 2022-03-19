@@ -140,11 +140,6 @@ input::placeholder {
 	color: var(--red);
 }
 
-.user-item__validation-error_name,
-.user-item__validation-error_phone {
-	display: none;
-}
-
 .user-item__button-box {
 	display: flex;
 
