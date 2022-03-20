@@ -7,11 +7,13 @@ const elements = {
 	newUserButton: document.querySelector( ".button_add-user" ),
 };
 
-// В конце: оставить плейсхолдеры фетч апи.
-
-const regName = /^[a-zа-я]+$/i;
+// Если нужна строгая проверка только на буквы, можно её включить,
+// в ТЗ написано, что нужна валидация на не пустоту.
+// const regName = /^[a-zа-я]+$/i;
 const regPhone = /^8-\d{3}-\d{3}-\d{2}-\d{2}$/;
 
+// Это статические данные, но вообще изначально массив должен быть пустой,
+// и в функции initUsers происходило бы его заполнение путем получения данных через fetch.
 const users = [
 	{
 		id: 0,
@@ -39,24 +41,15 @@ const users = [
 	}
 ];
 
-const onInputChange = input => {
-	console.log( "---------------" );
-	console.log( [...input.value] );
-	const symbols = [...input.value].filter( symbol => symbol !== "-" ).slice( 0, 11 );
-	console.log( symbols );
+const onInputChangeValue = input => {
+	const symbols = [...input.value].filter( symbol => !isNaN( parseInt( symbol ) ) ).slice( 0, 11 );
 
-	if (symbols.length >= 2 && symbols[1] !== "-") symbols.splice( 1, 0, "-" );
-	console.log( symbols );
-	if (symbols.length >= 6 && symbols[5] !== "-") symbols.splice( 5, 0, "-" );
-	console.log( symbols );
-	if (symbols.length >= 10 && symbols[9] !== "-") symbols.splice( 9, 0, "-" );
-	console.log( symbols );
-	if (symbols.length >= 13 && symbols[12] !== "-") symbols.splice( 12, 0, "-" );
-	console.log( symbols );
+	if (symbols.length >= 2) symbols.splice( 1, 0, "-" );
+	if (symbols.length >= 6) symbols.splice( 5, 0, "-" );
+	if (symbols.length >= 10) symbols.splice( 9, 0, "-" );
+	if (symbols.length >= 13) symbols.splice( 12, 0, "-" );
 
 	input.value = symbols.join( "" );
-
-	console.log( "---------------" );
 };
 
 const getUserTemplateHTML = ( userId, userName, userPhone ) => {
@@ -67,7 +60,7 @@ const getUserTemplateHTML = ( userId, userName, userPhone ) => {
 				<span class="user-item__validation-error" style="display: none;"></span>
 			</label>
 			<label class="user-item__input-wrapper">
-				<input class="user-item__phone" type="text" placeholder="8-999-999-99-99" value="${userPhone}" readonly oninput="onInputChange( this );">
+				<input class="user-item__phone" type="text" placeholder="8-999-999-99-99" value="${userPhone}" readonly oninput="onInputChangeValue( this );">
 				<span class="user-item__validation-error" style="display: none;"></span>
 			</label>
 		</div>
@@ -78,7 +71,22 @@ const getUserTemplateHTML = ( userId, userName, userPhone ) => {
 	</div>`;
 };
 
-const initUsersHTML = () => {
+const initUsers = () => {
+	// Функцию обернуть в async.
+	// Внутри функцию разбить на try catch блоки.
+	// Это все относится к try:
+	// const response = await fetch( url );
+	// if (!response.ok) throw "Проблемка возникла...";	
+	// const data = await response.json();
+	// data.forEach( user => {
+	// 	users.push({
+	// 		id: user.id,
+	// 		name: user.name,
+	// 		phone: user.phone,
+	// 		isEditing: false
+	// 	});
+	// });
+
 	users.forEach( user => elements.usersContainer.insertAdjacentHTML(
 		"beforeEnd",
 		getUserTemplateHTML( user.id, user.name, user.phone )
@@ -87,7 +95,7 @@ const initUsersHTML = () => {
 
 const getMessageValidationError = ( value, reg ) => {
 	if (!value.length) return "Заполните поле!"; 
-	if (!reg.test( value )) return "Поле не соответствует формату!";
+	if (reg && !reg.test( value )) return "Поле не соответствует формату!";
 
 	return false;
 }
@@ -98,7 +106,7 @@ const getValidationInfo = ( name, phone ) => {
 		phoneErrorMessage: false
 	};
 
-	result.nameErrorMessage = getMessageValidationError( name, regName );
+	result.nameErrorMessage = getMessageValidationError( name );
 	result.phoneErrorMessage = getMessageValidationError( phone, regPhone );
 	result.isError = !!(result.nameErrorMessage || result.phoneErrorMessage);
 
@@ -122,6 +130,18 @@ const getUserIndex = userId => {
 };
 
 const addUser = ( name, phone ) => {
+	// Функцию обернуть в async.
+	// Внутри функцию разбить на try catch блоки.
+	// Это все относится к try:
+	// const response = await fetch( url, {
+	// 	method: "POST",
+	// 	headers: {
+	// 		// ...
+	// 	},
+	// 	body: JSON.stringify({ id, name, phone })
+	// });
+	// if (!response.ok) throw "Проблемка возникла...";
+
 	const id = new Date().getTime(); // в качестве заглушки
 	users.push({
 		id,
@@ -137,6 +157,10 @@ const addUser = ( name, phone ) => {
 };
 
 const setUser = ( id, isEditing, name, phone ) => {
+	// Функцию обернуть в async.
+	// Внутри функцию разбить на try catch блоки.
+	// Это все относится к try:
+
 	const userIndex = getUserIndex( id );
 	if (userIndex === -1) return;
 
@@ -145,12 +169,21 @@ const setUser = ( id, isEditing, name, phone ) => {
 	const phoneInput = userItem.querySelector( ".user-item__phone" );
 
 	// isEditing - если true, то item находится в состоянии редактирования, то есть кликнули
-	// кнопку "Редактировать",  иначе - была нажата кнопка "Сохранить"
+	// кнопку "Редактировать", иначе - была нажата кнопка "Сохранить"
 	if (isEditing) {
 		nameInput.focus();
 		nameInput.selectionStart = nameInput.value.length;
 	}
 	else {
+		// const response = await fetch( url, {
+		// 	method: "PUT",
+		// 	headers: {
+		// 		// ...
+		// 	},
+		// 	body: JSON.stringify({ id, name, phone })
+		// });
+		// if (!response.ok) throw "Проблемка возникла...";
+
 		if (users[userIndex].name !== name) {
 			users[userIndex].name = name;
 			nameInput.setAttribute( "value", name );
@@ -166,13 +199,25 @@ const setUser = ( id, isEditing, name, phone ) => {
 
 	nameInput.readOnly = !isEditing;
 	phoneInput.readOnly = !isEditing;
-
+	
 	userItem.querySelector( ".button_edit-user" ).innerHTML = isEditing ? "Сохранить" : "Редактировать";
 };
 
 const removeUser = id => {
+	// Функцию обернуть в async.
+	// Внутри функцию разбить на try catch блоки.
+	// Это все относится к try:
+	
 	const userIndex = getUserIndex( id );
 	if (userIndex === -1) return;
+
+	// const response = await fetch( `${url}/${id}`, {
+	// 	method: "DELETE",
+	// 	headers: {
+	// 		// ...
+	// 	}
+	// });
+	// if (!response.ok) throw "Проблемка возникла...";
 
 	users.splice( userIndex, 1 );
 	document.querySelector( `.user-item[data-id="${id}"]` ).remove();
@@ -180,7 +225,7 @@ const removeUser = id => {
 
 
 
-initUsersHTML();
+initUsers();
 
 elements.usersContainer.addEventListener( "click", event => {
 	const clickedElement = event.target;
@@ -224,5 +269,5 @@ elements.newUserButton.addEventListener( "click", event => {
 });
 
 document.querySelectorAll( ".user-item__phone" ).forEach( phoneInput => {
-	phoneInput.addEventListener( "input", () => onInputChange( phoneInput ) );
+	phoneInput.addEventListener( "input", () => onInputChangeValue( phoneInput ) );
 });
