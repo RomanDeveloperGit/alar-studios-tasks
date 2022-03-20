@@ -1,7 +1,7 @@
 const elements = {
 	usersContainer: document.querySelector( ".users-page__item-box" ),
-	newUserNameInput: document.querySelector( ".users-page__new-item .user-item__name" ),
-	newUserPhoneInput: document.querySelector( ".users-page__new-item .user-item__phone" ),
+	newUserNameInput: document.querySelector( ".users-page__new-user .user-item__name" ),
+	newUserPhoneInput: document.querySelector( ".users-page__new-user .user-item__phone" ),
 	newUserNameError: document.querySelector( ".user-item__validation-error_name" ),
 	newUserPhoneError: document.querySelector( ".user-item__validation-error_phone" ),
 	newUserButton: document.querySelector( ".button_add-user" ),
@@ -10,34 +10,54 @@ const elements = {
 // В конце: оставить плейсхолдеры фетч апи.
 
 const regName = /^[a-zа-я]+$/i;
-const regPhone = /^[a-zа-я]+$/i;
+const regPhone = /^8-\d{3}-\d{3}-\d{2}-\d{2}$/;
 
 const users = [
 	{
 		id: 0,
-		name: "TestUser1",
-		phone: "+7-901-949-53-17",
+		name: "TesterOne",
+		phone: "8-901-949-53-17",
 		isEditing: false
 	},
 	{
 		id: 12,
-		name: "TestUser2",
-		phone: "+7-901-949-53-17",
+		name: "TesterSecond",
+		phone: "8-901-949-53-17",
 		isEditing: false
 	},
 	{
 		id: 22,
 		name: "Роман",
-		phone: "+7-901-949-53-17",
+		phone: "8-901-949-53-17",
 		isEditing: false
 	},
 	{
 		id: 32,
-		name: "TestUser3",
-		phone: "+7-901-949-53-17",
+		name: "TestThird",
+		phone: "8-901-949-53-17",
 		isEditing: false
 	}
 ];
+
+const onInputChange = input => {
+	console.log( "---------------" );
+	console.log( [...input.value] );
+	const symbols = [...input.value].filter( symbol => symbol !== "-" ).slice( 0, 11 );
+	console.log( symbols );
+
+	if (symbols.length >= 2 && symbols[1] !== "-") symbols.splice( 1, 0, "-" );
+	console.log( symbols );
+	if (symbols.length >= 6 && symbols[5] !== "-") symbols.splice( 5, 0, "-" );
+	console.log( symbols );
+	if (symbols.length >= 10 && symbols[9] !== "-") symbols.splice( 9, 0, "-" );
+	console.log( symbols );
+	if (symbols.length >= 13 && symbols[12] !== "-") symbols.splice( 12, 0, "-" );
+	console.log( symbols );
+
+	input.value = symbols.join( "" );
+
+	console.log( "---------------" );
+};
 
 const getUserTemplateHTML = ( userId, userName, userPhone ) => {
 	return `<div class="user-item" data-id="${userId}">
@@ -47,7 +67,7 @@ const getUserTemplateHTML = ( userId, userName, userPhone ) => {
 				<span class="user-item__validation-error" style="display: none;"></span>
 			</label>
 			<label class="user-item__input-wrapper">
-				<input class="user-item__phone" type="text" placeholder="+7-999-999-99-99" value="${userPhone}" readonly>
+				<input class="user-item__phone" type="text" placeholder="8-999-999-99-99" value="${userPhone}" readonly oninput="onInputChange( this );">
 				<span class="user-item__validation-error" style="display: none;"></span>
 			</label>
 		</div>
@@ -120,24 +140,34 @@ const setUser = ( id, isEditing, name, phone ) => {
 	const userIndex = getUserIndex( id );
 	if (userIndex === -1) return;
 
-	const userItemHTML = document.querySelector( `.user-item[data-id="${id}"]` );
+	const userItem = document.querySelector( `.user-item[data-id="${id}"]` );
+	const nameInput = userItem.querySelector( ".user-item__name" );
+	const phoneInput = userItem.querySelector( ".user-item__phone" );
 
+	// isEditing - если true, то item находится в состоянии редактирования, то есть кликнули
+	// кнопку "Редактировать",  иначе - была нажата кнопка "Сохранить"
 	if (isEditing) {
-		userItemHTML.querySelector( ".user-item__name" ).focus();
-		userItemHTML.querySelector( ".user-item__name" ).selectionStart = userItemHTML.querySelector( ".user-item__name" ).value.length;
+		nameInput.focus();
+		nameInput.selectionStart = nameInput.value.length;
 	}
 	else {
-		// Проверка, если не совпадают, аналогично с отрисовкой.
-		users[userIndex].name = name;
-		users[userIndex].phone = phone;
+		if (users[userIndex].name !== name) {
+			users[userIndex].name = name;
+			nameInput.setAttribute( "value", name );
+		}
+
+		if (users[userIndex].phone !== phone) {
+			users[userIndex].phone = phone;
+			phoneInput.setAttribute( "value", phone );
+		}
 	}
 
 	users[userIndex].isEditing = isEditing;
 
-	userItemHTML.querySelector( ".user-item__name" ).readOnly = !isEditing;
-	userItemHTML.querySelector( ".user-item__phone" ).readOnly = !isEditing;
+	nameInput.readOnly = !isEditing;
+	phoneInput.readOnly = !isEditing;
 
-	userItemHTML.querySelector( ".button_edit-user" ).innerHTML = isEditing ? "Сохранить" : "Редактировать";
+	userItem.querySelector( ".button_edit-user" ).innerHTML = isEditing ? "Сохранить" : "Редактировать";
 };
 
 const removeUser = id => {
@@ -191,4 +221,8 @@ elements.newUserButton.addEventListener( "click", event => {
 
 	setVisibleError( elements.newUserNameError, nameErrorMessage );
 	setVisibleError( elements.newUserPhoneError, phoneErrorMessage );
+});
+
+document.querySelectorAll( ".user-item__phone" ).forEach( phoneInput => {
+	phoneInput.addEventListener( "input", () => onInputChange( phoneInput ) );
 });

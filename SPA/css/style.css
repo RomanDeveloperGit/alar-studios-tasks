@@ -141,8 +141,8 @@ input::placeholder {
 
 .user-item__name[readonly],
 .user-item__phone[readonly],
-.users-page__new-item .user-item__name,
-.users-page__new-item .user-item__phone {
+.users-page__new-user .user-item__name,
+.users-page__new-user .user-item__phone {
 	opacity: 1;
 }
 
